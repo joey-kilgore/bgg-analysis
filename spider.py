@@ -6,9 +6,9 @@ try:
     with open('usernames.pkl', 'rb') as f:
         users = pickle.load(f)
     with open('games.pkl', 'rb') as f:
-        foundGames = pickle.dump(f)
+        foundGames = pickle.load(f)
     with open('ratings.pkl', 'rb') as f:
-        ratings = pickle.dump(f)
+        ratings = pickle.load(f)
 except:
     users = []
     foundGames = {} # key-game id, val-game obj
@@ -46,6 +46,7 @@ print('TOTAL USERS: '+str(len(users)))
 numRatings = 0
 for k in ratings.keys():
     numRatings += len(ratings[k])
+print('NUM RATINGS: '+str(numRatings))
 
 with open('usernames.pkl', 'wb') as f:
     pickle.dump(users, f)
