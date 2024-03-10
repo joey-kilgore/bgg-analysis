@@ -10,12 +10,15 @@ class Game:
         if game['subtype'] != 'boardgame': self = None
 
         self.name = game.find('name').text
-        self.objectid = game['objectid']
-        self.own = game.find('status')['own']
-        self.prevowned = game.find('status')['prevowned']
-        self.want = game.find('status')['want']
+        self.objectid = int(game['objectid'])
+        self.own = int(game.find('status')['own'])
+        self.prevowned = int(game.find('status')['prevowned'])
+        self.want = int(game.find('status')['want'])
         self.owner = username
-        self.myrating = game.find('rating')['value']
+        try:
+            self.myrating = float(game.find('rating')['value'])
+        except:
+            self.myrating = None
 
 def getCollection(username, gamesDict=None):
     url = baseURL+'/xmlapi/collection/'+username
