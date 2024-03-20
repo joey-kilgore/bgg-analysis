@@ -33,7 +33,9 @@ if __name__ == '__main__':
         time.sleep(1)
 
     for user in newUsers:
-        if user in users: continue
+        if user in users: 
+            newUsers.remove(user)
+            continue
         users.append(user)
 
     print(newUsers)
