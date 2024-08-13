@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import time
 from random import randint
+import random
 
 baseURL = 'https://www.boardgamegeek.com'
 
@@ -14,13 +15,22 @@ class Game:
         self.own = int(game.find('status')['own'])
         self.prevowned = int(game.find('status')['prevowned'])
         self.want = int(game.find('status')['want'])
+        self.wish = int(game.find('status')['wishlist'])
+        if self.wish == 1:
+            self.wish = int(game.find('status')['wishlistpriority'])
         self.owner = username
         try:
             self.myrating = float(game.find('rating')['value'])
         except:
             self.myrating = None
 
-def getCollection(username, gamesDict=None):
+def getCollection(username):
+    """Collect the games for a user on BGG and return a list of 
+    all games that were found (type Game)
+
+    Args:
+        username (str): username where the collection is listed 
+    """
     url = baseURL+'/xmlapi/collection/'+username
     flag = True
     while flag:
@@ -59,3 +69,6 @@ def score(game):
         return float(game.myrating)
     except:
         return 0.0
+    
+def generate_random_hex_color():
+    return "#{:06x}".format(random.randint(0, 0xFFFFFF))
