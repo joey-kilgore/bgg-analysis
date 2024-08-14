@@ -25,12 +25,6 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: List src directory for debugging
-      run: |
-         ls -R src
-    - name: Verify installation
-      run: |
-        pip show SimLogger
     - name: Build HTML
       run: |
         cd docs
