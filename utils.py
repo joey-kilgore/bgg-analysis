@@ -12,6 +12,7 @@ class Game:
 
         self.name = game.find('name').text
         self.objectid = int(game['objectid'])
+        self.thumbnail = game.find('thumbnail').text
         self.own = int(game.find('status')['own'])
         self.prevowned = int(game.find('status')['prevowned'])
         self.want = int(game.find('status')['want'])
