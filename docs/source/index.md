@@ -10,6 +10,8 @@ They are:
 - [Wellsroderick](https://boardgamegeek.com/collection/user/Wellsroderick)
 - [withouthavingseen](https://boardgamegeek.com/collection/user/withouthavingseen)
 
+and checkout the [github repo](https://github.com/joey-kilgore/bgg-analysis)
+
 ## Overview of collections
 
 Based on the BGG stats we can first get an overview of everyone's collections. 
