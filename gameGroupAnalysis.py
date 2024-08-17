@@ -12,6 +12,7 @@ users = ['mrjoeboo123',
 
 docsFolder = './docs/source/generated/'
 os.makedirs(docsFolder, exist_ok=True)
+bggGameLink = 'https://boardgamegeek.com/boardgame/'
 
 collections = {}
 for user in users:
@@ -86,7 +87,7 @@ for i in range(len(users)-1):
 
 out = "<table><tr><th>Game</th><th>Owns</th></tr>"
 for k in matches.keys():
-    out += f'<tr><td><img src="{games[k].thumbnail}" /></td><td>'
+    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img src="{games[k].thumbnail}" /></a></td><td>'
     for user in matches[k]:
         out += f"{user} "
     out += '</td>'
@@ -108,7 +109,7 @@ for i in range(len(users)):
 
 out = "<table><tr><th>Game</th><th>Wants to play</th><th>Owns</th></tr>"
 for (game, userWish, userOwn) in matches:
-    out += f'<tr><td><img src="{game.thumbnail}" /></td>'
+    out += f'<tr><td><a href="{bggGameLink+str(game.objectid)}"><img src="{game.thumbnail}" /></a></td>'
     out += f"<td>{userWish}</td><td>{userOwn}</td>"
     out += '</tr>   '
       
@@ -135,7 +136,7 @@ for i in range(len(users)-1):
 
 out = "<table><tr><th>Game</th><th>Owns</th></tr>"
 for k in matches.keys():
-    out += f'<tr><td><img src="{games[k].thumbnail}" /></td><td>'
+    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img src="{games[k].thumbnail}" /></a></td><td>'
     for user in matches[k]:
         out += f"{user} "
     out += '</td></tr> '
