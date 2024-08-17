@@ -51,3 +51,4 @@ Games that 2 or more people own.
 ```{include} generated/multi_own.html
 ```
 
+<iframe src="_static/own_graph.html" width="100%" height="1000px" frameborder="0"></iframe>
