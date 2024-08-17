@@ -3,12 +3,15 @@ from tabulate import tabulate
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import networkx as nx
+from pyvis.network import Network
 
 users = ['mrjoeboo123',
         'Schwingzilla',
         'ngeagan',
         'Wellsroderick',
         'withouthavingseen']
+
 
 docsFolder = './docs/source/generated/'
 os.makedirs(docsFolder, exist_ok=True)
@@ -144,3 +147,22 @@ out += "</table>"
 
 with open(docsFolder+'multi_own.html','w') as f:
     f.write(out)
+
+
+# building common own graph
+graph = nx.Graph()
+
+for user in users:
+    graph.add_node(user)
+
+    for g in collections[user]:
+        if g.own != 1: continue
+        graph.add_node(g.name)
+        graph.add_edge(user,g.name)
+
+nt = Network('800px', '800px')
+nt.from_nx(graph)
+nt.show_buttons(filter_=['physics'])
+docsFolder = './docs/source/_static/'
+os.makedirs(docsFolder, exist_ok=True)
+nt.save_graph(docsFolder+'own_graph.html')
