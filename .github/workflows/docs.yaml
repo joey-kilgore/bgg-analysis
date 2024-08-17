@@ -28,6 +28,7 @@ jobs:
         python3 -m pip install --upgrade pip
         pip install -r requirements.txt
     - name: Generate Analysis HTML
+      run: |
         python3 gameGroupAnalysis.py
     - name: Build HTML
       run: |
