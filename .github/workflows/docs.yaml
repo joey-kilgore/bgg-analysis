@@ -9,6 +9,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+      - cron: "0 3 * * 1"  # Runs every Monday at 03:00 AM UTC
 
 jobs:
   build:
@@ -25,6 +27,8 @@ jobs:
       run: |
         python3 -m pip install --upgrade pip
         pip install -r requirements.txt
+    - name: Generate Analysis HTML
+        python3 gameGroupAnalysis.py
     - name: Build HTML
       run: |
         cd docs
