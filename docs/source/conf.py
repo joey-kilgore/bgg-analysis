@@ -24,6 +24,10 @@ source_suffix = {
     '.md': 'markdown',
 }
 
+myst_enable_extensions = [
+    "html_admonition",
+    "html_image"
+]
 
 # -- Options for HTML output -------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#options-for-html-output
