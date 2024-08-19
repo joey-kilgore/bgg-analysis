@@ -6,7 +6,7 @@ import os
 import networkx as nx
 from pyvis.network import Network
 
-users = ['mrjoeboo123',
+users = ['joeyLiu',
         'Schwingzilla',
         'ngeagan',
         'Wellsroderick',
@@ -50,6 +50,7 @@ all_ratings = []
 colors = []
 binwidth = 0.5
 bins=np.arange(1, 10 + binwidth, binwidth)
+os.makedirs('./docs/source/plots', exist_ok=True)
 for user in users:
     ratings = []
     color = generate_random_hex_color()
@@ -160,7 +161,7 @@ for user in users:
         graph.add_node(g.name)
         graph.add_edge(user,g.name)
 
-nt = Network('800px', '800px')
+nt = Network('720px', '1080px')
 nt.from_nx(graph)
 nt.show_buttons(filter_=['physics'])
 docsFolder = './docs/source/_static/'

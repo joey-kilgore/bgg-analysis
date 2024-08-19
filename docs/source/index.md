@@ -4,7 +4,7 @@
 Currently, 5 members of our game group have posted their BGG username to provide analysis.
 
 They are:
-- [mrjoeboo123](https://boardgamegeek.com/collection/user/mrjoeboo123)
+- [joeyLiu](https://boardgamegeek.com/collection/user/joeyLiu)
 - [Schwingzilla](https://boardgamegeek.com/collection/user/Schwingzilla)
 - [ngeagan](https://boardgamegeek.com/collection/user/ngeagan)
 - [Wellsroderick](https://boardgamegeek.com/collection/user/Wellsroderick)
@@ -25,7 +25,7 @@ See the `gameGroupAnalysis.ipynb` jupyter notebook for the code.
 
 The next piece of data we can grab is everyone's game ratings
 
-![mrjoeboo123 ratings](/plots/mrjoeboo123.png)
+![joeyLiu ratings](/plots/joeyLiu.png)
 ![Schwingzilla ratings](/plots/Schwingzilla.png)
 ![ngeagan ratings](/plots/ngeagan.png)
 ![Wellsroderick ratings](/plots/Wellsroderick.png)
@@ -48,7 +48,8 @@ and another player owns that game.
 ## Common Owns
 Games that 2 or more people own.
 
+[see graph animation!](_static/own_graph.html)
+
 ```{include} generated/multi_own.html
 ```
 
-<iframe src="_static/own_graph.html" width="100%" height="1000px" frameborder="0"></iframe>
