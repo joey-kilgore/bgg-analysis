@@ -50,6 +50,7 @@ all_ratings = []
 colors = []
 binwidth = 0.5
 bins=np.arange(1, 10 + binwidth, binwidth)
+os.makedirs('./docs/source/plots', exist_ok=True)
 for user in users:
     ratings = []
     color = generate_random_hex_color()
