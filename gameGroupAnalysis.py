@@ -6,7 +6,7 @@ import os
 import networkx as nx
 from pyvis.network import Network
 
-users = ['mrjoeboo123',
+users = ['joeyLiu',
         'Schwingzilla',
         'ngeagan',
         'Wellsroderick',
@@ -160,7 +160,7 @@ for user in users:
         graph.add_node(g.name)
         graph.add_edge(user,g.name)
 
-nt = Network('800px', '800px')
+nt = Network('720px', '1080px')
 nt.from_nx(graph)
 nt.show_buttons(filter_=['physics'])
 docsFolder = './docs/source/_static/'
