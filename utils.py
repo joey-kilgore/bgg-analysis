@@ -12,10 +12,14 @@ class Game:
 
         self.name = game.find('name').text
         self.objectid = int(game['objectid'])
-        self.thumbnail = game.find('thumbnail').text
+        try:
+            self.thumbnail = game.find('thumbnail').text
+        except Exception as e:
+            self.thumbnail = None
         self.own = int(game.find('status')['own'])
         self.prevowned = int(game.find('status')['prevowned'])
         self.want = int(game.find('status')['want'])
+        self.wantPlay = int(game.find('status')['wanttoplay'])
         self.wish = int(game.find('status')['wishlist'])
         if self.wish == 1:
             self.wish = int(game.find('status')['wishlistpriority'])

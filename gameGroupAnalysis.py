@@ -10,7 +10,8 @@ users = ['joeyLiu',
         'Schwingzilla',
         'ngeagan',
         'Wellsroderick',
-        'withouthavingseen']
+        'withouthavingseen',
+        'jackieh9']
 
 
 docsFolder = './docs/source/generated/'
@@ -91,7 +92,7 @@ for i in range(len(users)-1):
 
 out = "<table><tr><th>Game</th><th>Owns</th></tr>"
 for k in matches.keys():
-    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img src="{games[k].thumbnail}" /></a></td><td>'
+    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img alt="{games[k].name}" src="{games[k].thumbnail}" /></a></td><td>'
     for user in matches[k]:
         out += f"{user} "
     out += '</td>'
@@ -102,13 +103,13 @@ with open(docsFolder+'common_interests.html','w') as f:
 
 
 # wish and own matches
-print("Games matches for wishlist")
+print("Games matches for wishlist/wants")
 matches = [] # [(game,userWish,userOwn)]
 for i in range(len(users)):
     for j in range(len(users)):
         for g1 in collections[users[i]]:
             for g2 in collections[users[j]]:
-                if g1.objectid == g2.objectid and g1.wish!=0 and g2.own==1:
+                if g1.objectid == g2.objectid and (g1.wish!=0 or g1.want!=0 or g1.wantPlay!=0) and g2.own==1:
                     matches.append( (g1, users[i], users[j]) )
 
 out = "<table><tr><th>Game</th><th>Wants to play</th><th>Owns</th></tr>"
