@@ -11,7 +11,8 @@ users = ['joeyLiu',
         'ngeagan',
         'Wellsroderick',
         'withouthavingseen',
-        'jackieh9']
+        'jackieh9',
+        'mcrump']
 
 
 docsFolder = './docs/source/generated/'
