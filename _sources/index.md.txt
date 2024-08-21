@@ -9,6 +9,7 @@ They are:
 - [ngeagan](https://boardgamegeek.com/collection/user/ngeagan)
 - [Wellsroderick](https://boardgamegeek.com/collection/user/Wellsroderick)
 - [withouthavingseen](https://boardgamegeek.com/collection/user/withouthavingseen)
+- [jackieh9](https://boardgamegeek.com/collection/user/jackieh9)
 
 and checkout the [github repo](https://github.com/joey-kilgore/bgg-analysis)
 
@@ -30,6 +31,7 @@ The next piece of data we can grab is everyone's game ratings
 ![ngeagan ratings](/plots/ngeagan.png)
 ![Wellsroderick ratings](/plots/Wellsroderick.png)
 ![withouthavingseen ratings](/plots/withouthavingseen.png)
+![jackieh9](/plots/jackieh9.png)
 
 ## Common Interests
 
