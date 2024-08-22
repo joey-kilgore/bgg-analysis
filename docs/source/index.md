@@ -18,7 +18,7 @@ and checkout the [github repo](https://github.com/joey-kilgore/bgg-analysis)
 Based on the BGG stats we can first get an overview of everyone's collections. 
 See the `gameGroupAnalysis.ipynb` jupyter notebook for the code.
 
-```{include} generated/overview.md
+```{include} _static/overview.md
 ```
 
 
@@ -37,14 +37,16 @@ The next piece of data we can grab is everyone's game ratings
 
 We can take the ratings that everyone has and find games where 2 or more people rate that game above an 8.  
 
-```{include} generated/common_interests.html
+```{raw} html
+:file: _static/common_interests.html
 ```
 
 ## Wish and Own  
 This is a list of games that one player wants to play (listed as a wishlist item)
 and another player owns that game.
 
-```{include} generated/wish_own.html
+```{raw} html
+:file: _static/wish_own.html
 ```
 
 ## Common Owns
@@ -52,6 +54,7 @@ Games that 2 or more people own.
 
 [see graph animation!](_static/own_graph.html)
 
-```{include} generated/multi_own.html
+```{raw} html
+:file: _static/multi_own.html
 ```
 
