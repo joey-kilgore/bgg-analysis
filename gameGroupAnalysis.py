@@ -5,6 +5,7 @@ import numpy as np
 import os
 import networkx as nx
 from pyvis.network import Network
+from htmlIO import *
 
 users = ['joeyLiu',
         'Schwingzilla',
@@ -15,7 +16,7 @@ users = ['joeyLiu',
         'mcrump']
 
 
-docsFolder = './docs/source/generated/'
+docsFolder = './docs/source/_static/'
 os.makedirs(docsFolder, exist_ok=True)
 bggGameLink = 'https://boardgamegeek.com/boardgame/'
 
@@ -91,17 +92,18 @@ for i in range(len(users)-1):
                         games[g1.name] = g1
 
 
-out = "<table><tr><th>Game</th><th>Owns</th></tr>"
+commonInterestFile = docsFolder+'common_interests.html'
+writeHeaderHTMLTable(commonInterestFile, 'common_interest')
+out = "<tr><th>Game</th><th>Interested</th></tr>"
 for k in matches.keys():
-    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img alt="{games[k].name}" src="{games[k].thumbnail}" /></a></td><td>'
+    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img class="game-img" alt="{games[k].name}" src="{games[k].thumbnail}" /></a></td>\n<td>'
     for user in matches[k]:
         out += f"{user} "
-    out += '</td>'
-out += "</table>"
+    out += '</td></tr>\n'
 
-with open(docsFolder+'common_interests.html','w') as f:
+with open(commonInterestFile,'a') as f:
     f.write(out)
-
+writeFooterHTMLTable(commonInterestFile)
 
 # wish and own matches
 print("Games matches for wishlist/wants")
@@ -113,16 +115,17 @@ for i in range(len(users)):
                 if g1.objectid == g2.objectid and (g1.wish!=0 or g1.want!=0 or g1.wantPlay!=0) and g2.own==1:
                     matches.append( (g1, users[i], users[j]) )
 
-out = "<table><tr><th>Game</th><th>Wants to play</th><th>Owns</th></tr>"
+wishOwnFile = docsFolder+'wish_own.html'
+writeHeaderHTMLTable(wishOwnFile, 'wish_own')
+out = "<tr><th>Game</th><th>Wants to play</th><th>Owns</th></tr>"
 for (game, userWish, userOwn) in matches:
-    out += f'<tr><td><a href="{bggGameLink+str(game.objectid)}"><img src="{game.thumbnail}" /></a></td>'
+    out += f'<tr><td><a href="{bggGameLink+str(game.objectid)}"><img class="game-img" alt="{game.name}" src="{game.thumbnail}" /></a></td>\n'
     out += f"<td>{userWish}</td><td>{userOwn}</td>"
-    out += '</tr>   '
+    out += '</tr>\n   '
       
-out += "</table>"
-
-with open(docsFolder+'wish_own.html','w') as f:
+with open(wishOwnFile,'a') as f:
     f.write(out)
+writeFooterHTMLTable(wishOwnFile)
 
 # common owns
 print("Games both players own")
@@ -140,17 +143,18 @@ for i in range(len(users)-1):
                         matches[g1.name] = [users[i], users[j]]
                         games[g1.name] = g1
 
-out = "<table><tr><th>Game</th><th>Owns</th></tr>"
+commonOwnFile = docsFolder + 'multi_own.html'
+writeHeaderHTMLTable(commonOwnFile, 'multi_own')
+out = "<tr><th>Game</th><th>Owns</th></tr>"
 for k in matches.keys():
-    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img src="{games[k].thumbnail}" /></a></td><td>'
+    out += f'<tr><td><a href="{bggGameLink+str(games[k].objectid)}"><img class="game-img" alt="{games[k].name}" src="{games[k].thumbnail}" /></a></td><td>'
     for user in matches[k]:
         out += f"{user} "
-    out += '</td></tr> '
-out += "</table>"
+    out += '</td></tr>\n'
 
-with open(docsFolder+'multi_own.html','w') as f:
+with open(commonOwnFile,'a') as f:
     f.write(out)
-
+writeFooterHTMLTable(commonOwnFile)
 
 # building common own graph
 graph = nx.Graph()
