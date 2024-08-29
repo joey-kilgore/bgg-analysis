@@ -16,6 +16,8 @@ and checkout the [github repo](https://github.com/joey-kilgore/bgg-analysis)
 
 ## Overview of collections
 
+To search collections checkout the [search page](./own_search.md)
+
 Based on the BGG stats we can first get an overview of everyone's collections. 
 See the `gameGroupAnalysis.ipynb` jupyter notebook for the code.
 
@@ -60,3 +62,8 @@ Games that 2 or more people own.
 :file: _static/multi_own.html
 ```
 
+```{toctree}
+:maxdepth: 2
+:caption: Contents:
+
+own_search
