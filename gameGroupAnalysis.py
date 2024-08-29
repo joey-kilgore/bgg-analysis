@@ -107,9 +107,13 @@ writeFooterHTMLTable(commonInterestFile)
 # wish and own matches
 print("Games matches for wishlist/wants")
 matches = [] # [(game,userWish,userOwn)]
+allOwns = []
 for i in range(len(users)):
-    for j in range(len(users)):
-        for g1 in collections[users[i]]:
+    for g1 in collections[users[i]]:
+        if g1.own==1:
+            allOwns.append((g1, users[i]))
+        
+        for j in range(len(users)):
             for g2 in collections[users[j]]:
                 if g1.objectid == g2.objectid and (g1.wish!=0 or g1.want!=0 or g1.wantPlay!=0) and g2.own==1:
                     matches.append( (g1, users[i], users[j]) )
@@ -125,6 +129,18 @@ for (game, userWish, userOwn) in matches:
 with open(wishOwnFile,'a') as f:
     f.write(out)
 writeFooterHTMLTable(wishOwnFile)
+
+allOwnFile = docsFolder+'all_own.html'
+writeHeaderHTMLTable(allOwnFile, 'all_own')
+out = "<tr><th>Game</th><th>Owns</th></tr>"
+for (game, userOwn) in allOwns:
+    out += f'<tr><td><a href="{bggGameLink+str(game.objectid)}"><img class="game-img" alt="{game.name}" src="{game.thumbnail}" /></a></td>\n'
+    out += f"<td>{userOwn}</td>"
+    out += '</tr>\n   '
+      
+with open(allOwnFile,'a') as f:
+    f.write(out)
+writeFooterHTMLTable(allOwnFile)
 
 # common owns
 print("Games both players own")
