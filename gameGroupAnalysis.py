@@ -52,7 +52,8 @@ with open(docsFolder+'overview.md','w') as f:
 all_ratings = []
 colors = []
 binwidth = 0.5
-bins=np.arange(1, 10 + binwidth, binwidth)
+bins=np.arange(0.75, 10.25 + binwidth, binwidth)
+cutoffScore = {}
 os.makedirs('./docs/source/plots', exist_ok=True)
 for user in users:
     ratings = []
@@ -61,9 +62,15 @@ for user in users:
         if game.myrating != None:
             ratings.append(game.myrating)
 
+    stdev = np.std(ratings)
+    avg = np.average(ratings)
+    cutoffScore[user] = 10 if len(ratings)<1 or int(avg+1.5*stdev)>10 else int(avg+1.5*stdev)
     all_ratings.append(ratings)
     colors.append(color)
     plt.hist(ratings, bins=bins, label=user, color=color)
+    plt.axvline(x=avg, color='black', label=f'Avg Rating={avg:.1f}')
+    plt.axvspan(xmin=cutoffScore[user], xmax=10.25, alpha=0.15, color='lime')
+    plt.axvline(x=cutoffScore[user], color='green', label=f'Good Rating>={cutoffScore[user]:.1f}')
     plt.legend()
     plt.xlabel('Rating')
     plt.ylabel('Frequency of Rating')
@@ -73,7 +80,6 @@ for user in users:
 
 
 # common interests
-minRating = 8
 matches = {}
 games = {}
 for i in range(len(users)-1):
@@ -82,7 +88,7 @@ for i in range(len(users)-1):
             if g1.myrating == None: continue
             for g2 in collections[users[j]]:
                 if g2.myrating == None: continue
-                if g1.objectid == g2.objectid and g1.myrating>minRating and g2.myrating>minRating:
+                if g1.objectid == g2.objectid and g1.myrating>=cutoffScore[users[i]] and g2.myrating>=cutoffScore[users[j]]:
                     
                     try:
                         if users[j] not in matches[g1.name]:
