@@ -38,8 +38,9 @@ The next piece of data we can grab is everyone's game ratings
 ![mcrump ratings](/plots/mcrump.png)
 
 ## Common Interests
+TLDR - We compare peoples ratings, and take games where both people give it a relatively high rating compared to other games.
 
-We can take the ratings that everyone has and find games where 2 or more people rate that game above an 8.  
+Details - We can take the ratings that everyone has and find games where 2 or more people rate that game above their average rating + 1.5 standard devations (rounded down since most people rate whole numbers). This would place games listed here in a users top ~6.5% of game ratings (93.5% would be captured from a gaussian distribution). In practice we capture much more than 6.5% since we round down to the nearest integer value. This value for each player is shown on their histogram above for reference.
 
 ```{raw} html
 :file: _static/common_interests.html
