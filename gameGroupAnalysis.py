@@ -113,7 +113,7 @@ writeFooterHTMLTable(commonInterestFile)
 
 # wish and own matches
 print("Games matches for wishlist/wants")
-matches = [] # [(game,userWish,userOwn)]
+matches = {} # {gameID: [[userWish1],[userOwn1],gameObject]
 allOwns = []
 for i in range(len(users)):
     for g1 in collections[users[i]]:
@@ -123,15 +123,29 @@ for i in range(len(users)):
         for j in range(len(users)):
             for g2 in collections[users[j]]:
                 if g1.objectid == g2.objectid and (g1.wish!=0 or g1.want!=0 or g1.wantPlay!=0) and g2.own==1:
-                    matches.append( (g1, users[i], users[j]) )
+                    if(g1.objectid in matches.keys()):
+                        # this game is already in our table we can just
+                        #  add the missing want/own username
+                        if(users[i] not in matches[g1.objectid][0]):
+                            matches[g1.objectid][0].append(users[i])
+                        if(users[j] not in matches[g1.objectid][1]):
+                            matches[g1.objectid][1].append(users[j])
+                    else:
+                        matches[g1.objectid] = [[users[i]],[users[j]],g1]
 
 wishOwnFile = docsFolder+'wish_own.html'
 writeHeaderHTMLTable(wishOwnFile, 'wish_own')
 out = "<tr><th>Game</th><th>Wants to play</th><th>Owns</th></tr>"
-for (game, userWish, userOwn) in matches:
+for gameid in matches.keys():
+    game = matches[gameid][2]
     out += f'<tr><td><a href="{bggGameLink+str(game.objectid)}"><img class="game-img" alt="{game.name}" src="{game.thumbnail}" /></a></td>\n'
-    out += f"<td>{userWish}</td><td>{userOwn}</td>"
-    out += '</tr>\n   '
+    out += f"<td>"
+    for userWish in matches[gameid][0]:
+        out += f"{userWish} "
+    out += "</td><td>"
+    for userOwn in matches[gameid][1]:
+        out += f"{userOwn} "
+    out += "</td></tr>\n   "
       
 with open(wishOwnFile,'a') as f:
     f.write(out)
