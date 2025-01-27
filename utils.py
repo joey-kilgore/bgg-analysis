@@ -29,6 +29,23 @@ class Game:
         except:
             self.myrating = None
 
+class Play:
+    def __init__(self, play):
+        self.game = play.find('item')['name']
+        allPlayers = play.find_all('player')
+        self.players = []
+        self.scoresDict = {}
+        self.winningPlayers = []
+        for p in allPlayers:
+            self.players.append(p['name'])
+            try:
+                self.scoresDict[p['name']] = int(p['score'])
+            except Exception as e:
+                self.scoresDict[p['name']] = 0
+            if p['win'] =="1":
+                self.winningPlayers.append(p['name'])
+        
+
 def getCollection(username):
     """Collect the games for a user on BGG and return a list of 
     all games that were found (type Game)
@@ -77,3 +94,31 @@ def score(game):
     
 def generate_random_hex_color():
     return "#{:06x}".format(random.randint(0, 0xFFFFFF))
+
+def getPlaysFromUser(username):
+    page = 1
+    total_games = 1
+    plays = []
+    while page <= int((total_games-1)/100)+1:
+        url = baseURL+f'/xmlapi2/plays?username={username}&page={page}'
+        print(url)
+        flag = True
+        while flag:
+            url_link = requests.get(url)
+            soup = BeautifulSoup(url_link.text, "lxml")
+
+            if len(soup.find_all('message'))==0:
+                flag = False
+            else:
+                time.sleep(10)
+                print('REQUSTING AGAIN '+username)
+
+        total_games = int(soup.find('plays')['total'])
+        print(f"TOTAL GAMES: {total_games}")
+        items = soup.find_all('play')
+        
+        for i in items:
+            plays.append(Play(i))
+        page += 1
+        
+    return plays
