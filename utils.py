@@ -3,8 +3,26 @@ import requests
 import time
 from random import randint
 import random
+import os
 
-baseURL = 'https://www.boardgamegeek.com'
+# BGG requires authorized requests (since fall 2025). Register an app at
+# https://boardgamegeek.com/applications and expose the token as BGG_TOKEN.
+# Note: don't use the www. subdomain, it can interfere with authorization.
+baseURL = 'https://boardgamegeek.com'
+
+_session = requests.Session()
+_token = os.environ.get('BGG_TOKEN')
+if _token:
+    _session.headers['Authorization'] = f'Bearer {_token}'
+else:
+    print('WARNING: BGG_TOKEN not set, BGG API requests will be rejected (401)')
+
+
+def bggGet(url):
+    response = _session.get(url)
+    if response.status_code == 401:
+        raise RuntimeError('BGG API returned 401 Unauthorized - check that BGG_TOKEN is set and valid')
+    return response
 
 class Game:
     def __init__(self, game, username):
@@ -53,10 +71,10 @@ def getCollection(username):
     Args:
         username (str): username where the collection is listed 
     """
-    url = baseURL+'/xmlapi/collection/'+username
+    url = baseURL+f'/xmlapi2/collection?username={username}&stats=1'
     flag = True
     while flag:
-        url_link = requests.get(url)
+        url_link = bggGet(url)
         soup = BeautifulSoup(url_link.text, "lxml")
 
         if len(soup.find_all('message'))==0:
@@ -75,7 +93,7 @@ def getCollection(username):
 def getUsersFromThread(threadId):
     url = baseURL+'/xmlapi2/thread?id='+str(threadId)
 
-    url_link = requests.get(url)
+    url_link = bggGet(url)
     soup = BeautifulSoup(url_link.text, "lxml")
     articles = soup.find_all('article')
 
@@ -104,7 +122,7 @@ def getPlaysFromUser(username):
         print(url)
         flag = True
         while flag:
-            url_link = requests.get(url)
+            url_link = bggGet(url)
             soup = BeautifulSoup(url_link.text, "lxml")
 
             if len(soup.find_all('message'))==0:

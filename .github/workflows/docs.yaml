@@ -1,6 +1,6 @@
-name: "Sphinx: Render docs"
+name: "Build collection site"
 
-on: 
+on:
   push:
     branches:
       - main
@@ -11,6 +11,7 @@ on:
       - main
   schedule:
     - cron: "0 3 * * 1"  # Runs every Monday at 03:00 AM UTC
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,28 +21,27 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v5
       with:
-        python-version: '3.8'
+        python-version: '3.12'
+        cache: pip
     - name: Install dependencies
       run: |
-        python3 -m pip install --upgrade pip
+        python -m pip install --upgrade pip
         pip install -r requirements.txt
-    - name: Generate Analysis HTML
+    - name: Build site
+      env:
+        BGG_TOKEN: ${{ secrets.BGG_TOKEN }}
       run: |
-        python3 gameGroupAnalysis.py
-    - name: Build HTML
-      run: |
-        cd docs
-        make html
+        python buildSite.py
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: html-docs
-        path: docs/build/html/
+        name: site
+        path: site/
     - name: Deploy
-      uses: peaceiris/actions-gh-pages@v3
+      uses: peaceiris/actions-gh-pages@v4
       if: github.ref == 'refs/heads/main'
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: docs/build/html
+        publish_dir: site
