@@ -1,20 +1,32 @@
 # bgg-analysis
  Analysis of the Board Game Geek
 
-# Game Group Analysis
-Link to review - https://joey-kilgore.github.io/bgg-analysis/
+# My collection & plays
+Live page - https://joey-kilgore.github.io/bgg-analysis/
 
-The analysis is done in the `gameGroupAnalysis.ipynb`
+`buildSite.py` pulls one BGG account's collection, logged plays and game details
+(weight, mechanics, designers, best player counts) from the BGG XML API and renders
+a single self-contained page to `site/index.html`: play calendar, monthly activity,
+recent plays, a head-to-head rivalry section, play notes, ratings vs. plays,
+hot takes vs. the BGG average, a "what should we play tonight" picker, shelf of
+shame and a searchable collection table. A GitHub Action rebuilds it every Monday.
 
-To build docs (linux):  
+To build locally (PowerShell):
 ```
-virtualenv venv
-source venv/bin/activate
-pip install -r requirements.txt
-cd docs
-make html
+python -m venv .venv
+.venv\Scripts\pip install -r requirements.txt
+. .\set_env.ps1                    # sets BGG_TOKEN, see set_env.example.ps1
+$env:BGG_CACHE_DIR = ".bgg_cache"   # optional: cache API responses while iterating
+.venv\Scripts\python buildSite.py
+start site\index.html
 ```
 
+Optional settings (environment variables): `BGG_USERNAME` (default `joeyLiu`),
+`ME_NAME` (your name in logged plays, default `Joey`), `PARTNER_NAME`
+(the rivalry section, default `Mickey`).
+
+The page layout and charts live in `site_template.html`; `buildSite.py` injects
+the computed data as JSON.
 
 # initial setup
 To start collecting BGG data, we will grab random threads to easily get a random collection of usernames. We will then grab the ratings and games that each of those users has, and from there the data is aggregated into three pickled objects.
