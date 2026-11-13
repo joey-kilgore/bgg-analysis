@@ -250,6 +250,8 @@ def build():
         'ties': len(ties),
         'blowouts': blowouts,
         'learned': sorted(learned.values(), key=lambda g: g['date'], reverse=True),
+        # compact per-play log for the win-rate chart: [date, player count, result, quantity]
+        'log': [[p['date'], len(p['players']), res, p['qty']] for p, _, _, res in together],
     }
 
     # ---- other people at the table -------------------------------------
