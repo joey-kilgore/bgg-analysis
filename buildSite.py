@@ -293,8 +293,7 @@ def build():
                    key=lambda g: g['last'])
 
     rated = [coll_view(g) for g in collection if g['myrating'] is not None]
-    scatter = [{'id': g['id'], 'name': g['name'], 'rating': g['rating'], 'plays': g['plays'], 'own': g['own']}
-               for g in rated]
+    scatter = rated  # full views so the chart's detail panel can show more than name/rating/plays
     takes = sorted(({'id': g['id'], 'name': g['name'], 'thumb': g['thumb'], 'rating': g['rating'],
                      'bggavg': round(g['bggavg'], 2), 'diff': round(g['rating'] - g['bggavg'], 2)}
                     for g in rated if g['bggavg']), key=lambda t: t['diff'])
@@ -342,8 +341,17 @@ def build():
         'ratedCount': len(rated),
     }
 
+    # ---- full play log (compact: games listed once, plays reference them by id) ----
+    log_games = {gid: game_ref(gid) for gid in played_ids}
+    play_log = [{'date': p['date'], 'qty': p['qty'], 'gid': p['gameId'], 'len': p['length'],
+                 'loc': p['location'], 'note': p['note'], 'exp': p['expansions'],
+                 'players': [{'name': x['name'], 'win': x['win'], 'new': x['new'], 'score': x['score'],
+                              'me': is_me(x), 'partner': is_partner(x)} for x in p['players']]}
+                for p in plays]
+
     return {'overview': overview, 'activity': activity, 'recent': recent, 'topGames': top_games,
-            'rivalry': rivalry, 'notes': notes, 'opponents': opponents, 'collection': collection_data}
+            'rivalry': rivalry, 'notes': notes, 'opponents': opponents, 'collection': collection_data,
+            'playLog': {'games': log_games, 'plays': play_log}}
 
 
 def render(data):
