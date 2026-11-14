@@ -167,6 +167,32 @@ section.block > .sub { color: var(--ink-2); margin: 0 0 18px; max-width: 760px; 
 .tip .row strong { color: var(--ink); margin-left: auto; padding-left: 12px; font-variant-numeric: tabular-nums; }
 .tip .muted { color: var(--muted); }
 
+/* ratings vs plays: detail panel + swarm */
+.rp { display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 20px; align-items: start; }
+.rp-panel { position: sticky; top: 16px; background: var(--surface-2); border-radius: 12px; padding: 14px; font-size: 13px; min-height: 180px; }
+.rp-panel .rp-empty { color: var(--muted); line-height: 1.5; }
+.rp-panel .rp-empty b { color: var(--ink); font-size: 15px; display: block; margin-bottom: 4px; }
+.rp-head { display: grid; grid-template-columns: 64px minmax(0, 1fr); gap: 12px; align-items: center; }
+.rp-head .thumb { width: 64px; height: 64px; }
+.rp-head a { font-weight: 620; font-size: 15px; line-height: 1.25; text-decoration: none; color: var(--ink); overflow-wrap: anywhere; }
+.rp-head a:hover { text-decoration: underline; }
+.rp-head .s { color: var(--muted); font-size: 12.5px; margin-top: 2px; }
+.rp-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 12px; margin-top: 14px; }
+.rp-stats .k { color: var(--muted); font-size: 11.5px; }
+.rp-stats .v { font-size: 16px; font-weight: 620; font-variant-numeric: tabular-nums; }
+.rp-stats .v small { font-size: 12px; font-weight: 500; color: var(--muted); }
+.rp-flag { margin-top: 12px; padding: 7px 10px; border-radius: 8px; background: var(--accent-wash); color: var(--ink); font-size: 12.5px; }
+.rp-same { margin-top: 14px; border-top: 1px solid var(--grid); padding-top: 10px; }
+.rp-same .k { color: var(--muted); font-size: 11.5px; margin-bottom: 6px; }
+.rp-same .chips { margin: 0; }
+.rp-same button.chip { cursor: pointer; font: inherit; font-size: 12px; }
+.rp-same button.chip:hover { color: var(--ink); border-color: var(--axis); }
+.swarm-dot { cursor: pointer; outline: none; }
+.swarm-dot:focus-visible .ring, .swarm-dot.sel .ring { opacity: 1; }
+.swarm-dot .ring { opacity: 0; fill: none; stroke: var(--ink); stroke-width: 1.5; }
+.row-label { fill: var(--ink-2); font-size: 12px; font-variant-numeric: tabular-nums; }
+.row-label.int { fill: var(--ink); font-weight: 620; }
+
 /* segmented controls */
 .seg { display: inline-flex; background: var(--surface-2); border-radius: 9px; padding: 3px; gap: 2px; flex-wrap: wrap; }
 .seg button { border: 0; background: transparent; color: var(--ink-2); font: inherit; font-size: 13px; padding: 4px 11px; border-radius: 7px; cursor: pointer; }
@@ -273,6 +299,16 @@ td .gcell { display: flex; align-items: center; gap: 10px; min-width: 200px; }
 input.search { width: 100%; max-width: 320px; font: inherit; font-size: 14px; padding: 8px 12px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); }
 input.search:focus { outline: 2px solid var(--me); outline-offset: 1px; }
 
+/* play log filters */
+.filters { display: grid; grid-template-columns: 2fr repeat(3, minmax(0, 1fr)) repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
+.filters label { display: flex; flex-direction: column; gap: 4px; font-size: 12px; color: var(--muted); min-width: 0; }
+.filters input, .filters select { width: 100%; max-width: none; font: inherit; font-size: 14px; padding: 7px 10px; border-radius: 9px; border: 1px solid var(--border); background: var(--surface-2); color: var(--ink); min-width: 0; }
+.filters input:focus, .filters select:focus { outline: 2px solid var(--me); outline-offset: 1px; }
+.pl-summary { color: var(--ink-2); font-size: 13.5px; margin: 6px 0 8px; }
+.pl-summary b { color: var(--ink); }
+.play .loc { color: var(--muted); font-size: 12px; }
+@media (max-width: 880px) { .filters { grid-template-columns: repeat(2, minmax(0, 1fr)); } .filters .f-wide { grid-column: 1 / -1; } }
+
 /* game card grid */
 .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(112px, 1fr)); gap: 14px; }
 .gcard { text-decoration: none; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
@@ -308,6 +344,8 @@ footer { color: var(--muted); font-size: 13px; padding: 32px 0 48px; border-top:
   .grid-2, .grid-3 { grid-template-columns: 1fr; }
   .span-2 { grid-column: auto; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
+  .rp { grid-template-columns: 1fr; }
+  .rp-panel { position: static; min-height: 0; }
 }
 @media (max-width: 520px) {
   .play { grid-template-columns: 40px 1fr; }
@@ -333,6 +371,7 @@ footer { color: var(--muted); font-size: 13px; padding: 32px 0 48px; border-top:
     <a class="link" href="#logbook">Logbook</a>
     <a class="link" href="#collection">Collection</a>
     <a class="link" href="#browse">Browse</a>
+    <a class="link" href="#playlog">Play log</a>
     <span class="spacer"></span>
     <button class="theme-btn" id="theme" type="button" aria-label="Toggle dark mode" title="Toggle dark mode">◐</button>
   </div>
@@ -480,9 +519,12 @@ footer { color: var(--muted); font-size: 13px; padding: 32px 0 48px; border-top:
       <div class="tiles" id="coll-tiles" style="grid-template-columns:repeat(4,1fr)"></div>
       <div class="card">
         <h3>Ratings vs. plays</h3>
-        <p class="hint">Each dot is a game you've rated. Top-right games are well-loved and well-played. Bottom-right ones are favourites that deserve more table time.</p>
+        <p class="hint">One row per rating, one dot per rated game, pushed right by how often it's been played. Click a dot for details.</p>
         <div class="legend" id="scatter-legend"></div>
-        <div class="chart" id="scatter"></div>
+        <div class="rp">
+          <aside class="rp-panel" id="rp-panel" aria-live="polite"></aside>
+          <div class="chart" id="scatter"></div>
+        </div>
         <div id="gems" style="margin-top:14px"></div>
       </div>
       <div class="grid-2">
@@ -549,6 +591,27 @@ footer { color: var(--muted); font-size: 13px; padding: 32px 0 48px; border-top:
     <div class="card">
       <input class="search" id="browse-search" type="search" placeholder="Search games…" aria-label="Search games">
       <div class="table-wrap" style="margin-top:12px"><table id="browse-table"></table></div>
+    </div>
+  </section>
+
+  <section class="block" id="playlog">
+    <h2>Play log</h2>
+    <p class="sub">Every logged play. Filter by game, player, date range or result.</p>
+    <div class="card">
+      <div class="filters">
+        <label class="f-wide">Search<input class="search" id="pl-q" type="search" placeholder="Game, player, note, location…"></label>
+        <label>Game<select id="pl-game"><option value="">All games</option></select></label>
+        <label>Player<select id="pl-player"><option value="">Anyone</option></select></label>
+        <label>Result<select id="pl-result"></select></label>
+        <label>From<input type="date" id="pl-from"></label>
+        <label>To<input type="date" id="pl-to"></label>
+      </div>
+      <div class="row-between" style="margin:12px 0 4px;align-items:center">
+        <div class="seg" id="pl-range" role="group" aria-label="Date range presets"></div>
+        <button class="btn-more" type="button" id="pl-clear" style="margin:0">Clear filters</button>
+      </div>
+      <div class="pl-summary" id="pl-summary" aria-live="polite"></div>
+      <div class="plays-list" id="pl-list"></div>
     </div>
   </section>
 </main>
@@ -775,14 +838,18 @@ function playerChips(players) {
     return `<span class="chip ${p.win ? 'win' : ''}">${dot ? `<i class="dot" style="background:${dot}"></i>` : ''}${p.win ? TROPHY : ''}${esc(p.name)}${score}${p.new ? ' <span class="new">first play</span>' : ''}</span>`;
   }).join('');
 }
-function renderRecent(n) {
-  $('recent-list').innerHTML = D.recent.slice(0, n).map(p => `<div class="play">${thumb(p.game)}
+// one play as a list row; `meta` is the right-hand date column
+function playRow(p, meta) {
+  return `<div class="play">${thumb(p.game)}
     <div style="min-width:0">${gameLink(p.game, 'g')}${p.qty > 1 ? ` <span class="exp">×${p.qty}</span>` : ''}
       ${p.expansions.length ? `<div class="exp">+ ${p.expansions.map(esc).join(', ')}</div>` : ''}
       <div class="chips">${playerChips(p.players)}</div>
       ${p.note ? `<div class="note">“${esc(p.note)}”</div>` : ''}
     </div>
-    <div class="meta">${fmtDate(p.date, {weekday: 'short', month: 'short', day: 'numeric'})}<br>${ago(p.date)}</div></div>`).join('') +
+    <div class="meta">${meta}</div></div>`;
+}
+function renderRecent(n) {
+  $('recent-list').innerHTML = D.recent.slice(0, n).map(p => playRow(p, `${fmtDate(p.date, {weekday: 'short', month: 'short', day: 'numeric'})}<br>${ago(p.date)}`)).join('') +
     (n < D.recent.length ? `<button class="btn-more" type="button" id="more-recent">Show ${D.recent.length - n} more</button>` : '');
   const btn = $('more-recent'); if (btn) btn.onclick = () => renderRecent(D.recent.length);
 }
@@ -1023,53 +1090,121 @@ $('notes').innerHTML = D.notes.length ? D.notes.map(n => `<article class="log ${
     ['Never played', C.shame.length, 'see the shelf of shame'],
   ].map(([k, v, s]) => `<div class="tile"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join('');
 
-  // scatter: rating vs plays (sqrt scale)
-  legend('scatter-legend', [['var(--me)', 'Owned'], ['var(--both)', 'Not owned']]);
+  // ratings vs plays: one row per rating, dots swarm along a sqrt plays axis; click fills the side panel
+  legend('scatter-legend', [['var(--me)', 'Owned'], ['var(--both)', 'Not owned'], ['var(--accent-wash)', 'Underplayed favourites (8.5+, ≤2 plays)']]);
   const pts = C.scatter;
-  const hash = id => ((id * 2654435761) % 1000) / 1000 - 0.5;
+  const rowKey = r => Math.round(r * 2) / 2;
+  const fmtR = k => Number.isInteger(k) ? String(k) : k.toFixed(1);
+  const minKey = Math.min(...pts.map(p => rowKey(p.rating)));
+  const keys = [];
+  for (let k = 10; k >= minKey; k -= 0.5) keys.push(k);
+  const byRow = new Map(keys.map(k => [k, pts.filter(p => rowKey(p.rating) === k)]));
+  const isGem = p => p.rating >= 8.5 && p.plays <= 2;
+  let selId = null;
+  const dotNodes = new Map();
+
+  const panel = $('rp-panel');
+  const stat = (k, v) => `<div><div class="k">${k}</div><div class="v">${v}</div></div>`;
+  function showEmpty() {
+    const never = pts.filter(p => p.plays === 0).length, gems = pts.filter(p => p.own && isGem(p)).length;
+    panel.innerHTML = `<div class="rp-empty"><b>Pick a game</b>Click any dot to see its details here.<br><br>
+      ${pts.length} rated games, ${never} never played${gems ? `, and ${gems} owned favourite${gems === 1 ? '' : 's'} sitting in the shaded corner` : ''}.</div>`;
+  }
+  function select(p, fromChart) {
+    selId = p.id;
+    dotNodes.forEach((n, id) => n.classList.toggle('sel', id === selId));
+    const diff = p.bggavg ? p.rating - p.bggavg : null;
+    const players = p.minp ? (p.minp === p.maxp ? `${p.minp}` : `${p.minp}–${p.maxp}`) : '—';
+    const best = p.best && p.best.length ? ` <small>best ${p.best.join(', ')}</small>` : '';
+    const same = byRow.get(rowKey(p.rating)).filter(q => q.id !== p.id).sort((a, b) => b.plays - a.plays);
+    const flag = isGem(p) ? (p.own ? 'Underplayed favourite. Get this one to the table.' : 'You love it but haven\'t played it much, and it\'s not on the shelf.')
+      : p.plays >= 10 && p.rating < 6.5 ? 'Played a lot for a game you rate this low.' : '';
+    panel.innerHTML = `
+      <div class="rp-head">${thumb(p)}<div>${gameLink(p)}<div class="s">${[p.year, p.own ? 'On the shelf' : 'Not owned'].filter(Boolean).join(' · ')}</div></div></div>
+      <div class="rp-stats">
+        ${stat('Your rating', `${p.rating}${diff != null ? ` <small>${diff >= 0 ? '+' : '−'}${Math.abs(diff).toFixed(1)} vs BGG</small>` : ''}`)}
+        ${stat('BGG average', p.bggavg ? p.bggavg.toFixed(1) : '—')}
+        ${stat('Plays', p.plays)}
+        ${stat('Last played', p.last ? esc(ago(p.last)) : '—')}
+        ${stat('Players', players + best)}
+        ${stat('Weight', p.weight ? `${p.weight.toFixed(1)} <small>/ 5</small>` : '—')}
+        ${stat('Play time', p.time ? `${p.time} <small>min</small>` : '—')}
+        ${stat('BGG rank', p.rank ? '#' + fmtN(p.rank) : '—')}
+      </div>
+      ${flag ? `<div class="rp-flag">${flag}</div>` : ''}
+      ${same.length ? `<div class="rp-same"><div class="k">Also rated ${fmtR(rowKey(p.rating))}</div><div class="chips">${same.map(q =>
+        `<button class="chip" data-id="${q.id}">${esc(q.name)} <span class="sc">${q.plays}</span></button>`).join('')}</div></div>` : ''}`;
+    panel.querySelectorAll('button[data-id]').forEach(b => b.addEventListener('click', () => select(pts.find(q => q.id === +b.dataset.id))));
+    if (fromChart && matchMedia('(max-width: 880px)').matches) panel.scrollIntoView({block: 'nearest', behavior: 'smooth'});
+  }
+  showEmpty();
+
   responsive($('scatter'), W => {
-    const H = 300, m = {t: 12, r: 12, b: 34, l: 44}, iw = W - m.l - m.r, ih = H - m.t - m.b;
-    const xmin = Math.floor(Math.min(...pts.map(p => p.rating)) - 0.5), xmax = 10.5;
-    const ymax = Math.max(...pts.map(p => p.plays), 1);
-    const X = v => m.l + (v - xmin) / (xmax - xmin) * iw;
-    const Y = v => m.t + ih - Math.sqrt(v) / Math.sqrt(ymax) * ih;
-    const svg = sv('svg', {width: W, height: H, role: 'img', 'aria-label': 'My rating versus number of plays'});
-    // underplayed favourites zone
-    sv('rect', {x: X(8.25), y: Y(2.5), width: X(xmax) - X(8.25), height: m.t + ih - Y(2.5), fill: 'var(--accent-wash)', rx: 6}, svg);
-    const zt = sv('text', {x: X(xmax) - 6, y: Y(2.5) - 6, 'text-anchor': 'end', class: 'axis-text', style: 'fill:var(--ink-2)'}, svg);
-    zt.textContent = 'Underplayed favourites';
-    const yt = [0, 1, 5, 10, 25, 50].filter(v => v <= ymax * 1.05);
-    yt.forEach(v => {
-      sv('line', {x1: m.l, x2: W - m.r, y1: Y(v), y2: Y(v), class: v ? 'grid-line' : 'base-line'}, svg);
-      const t = sv('text', {x: m.l - 6, y: Y(v) + 3.5, 'text-anchor': 'end', class: 'axis-text'}, svg); t.textContent = v;
+    dotNodes.clear();
+    const small = W < 480, R = small ? 4 : 5, gap = 2 * R + 1.5;
+    const m = {t: 20, r: 40, b: 36, l: 40}, iw = W - m.l - m.r;
+    const pmax = Math.max(...pts.map(p => p.plays), 1);
+    const X = v => m.l + R + Math.sqrt(v) / Math.sqrt(pmax) * (iw - 2 * R);
+
+    // beeswarm within each row: try offsets 0, -g, +g, -2g, ... until the dot doesn't touch a placed one
+    let y = m.t;
+    const rows = keys.map(k => {
+      const placed = [];
+      [...byRow.get(k)].sort((a, b) => a.plays - b.plays || b.own - a.own || a.name.localeCompare(b.name)).forEach(p => {
+        const x = X(p.plays);
+        for (let i = 0; ; i++) {
+          const dy = (i % 2 ? -1 : 1) * Math.ceil(i / 2) * gap;
+          if (!placed.some(q => (q.x - x) ** 2 + (q.dy - dy) ** 2 < gap * gap)) { placed.push({p, x, dy}); break; }
+        }
+      });
+      const lo = Math.min(0, ...placed.map(d => d.dy)), hi = Math.max(0, ...placed.map(d => d.dy));
+      const h = placed.length ? Math.max(26, hi - lo + 2 * R + 12) : 16;
+      const row = {k, placed, y0: y, h, cy: y + h / 2 - (hi + lo) / 2};
+      y += h;
+      return row;
     });
-    for (let v = Math.ceil(xmin); v <= 10; v++) {
-      const t = sv('text', {x: X(v), y: H - 16, 'text-anchor': 'middle', class: 'axis-text'}, svg); t.textContent = v;
+    const H = y + m.b, bottom = y;
+    const svg = sv('svg', {width: W, height: H, role: 'group', 'aria-label': 'Your rating versus number of plays. One row per rating.'});
+
+    // underplayed-favourites zone: ratings 8.5+, up to 2 plays
+    const gemRows = rows.filter(r => r.k >= 8.5);
+    if (gemRows.length) {
+      const top = gemRows[0].y0, bot = gemRows[gemRows.length - 1].y0 + gemRows[gemRows.length - 1].h;
+      sv('rect', {x: m.l - 2, y: top, width: (X(2) + X(3)) / 2 - m.l + 2, height: bot - top, fill: 'var(--accent-wash)', rx: 6}, svg);
     }
-    const xl = sv('text', {x: m.l + iw / 2, y: H - 1, 'text-anchor': 'middle', class: 'axis-text'}, svg); xl.textContent = 'Your rating →';
-    const yl = sv('text', {x: 10, y: m.t + ih / 2, 'text-anchor': 'middle', class: 'axis-text', transform: `rotate(-90 10 ${m.t + ih / 2})`}, svg); yl.textContent = 'Plays';
-    const sorted = [...pts].sort((a, b) => a.own - b.own);
-    sorted.forEach(p => {
-      const cx = X(p.rating + hash(p.id) * 0.36), cy = Y(p.plays) + (p.plays === 0 ? -hash(p.id * 7) * 6 - 3 : 0);
-      const c = sv('circle', {cx, cy, r: 4.5, fill: p.own ? 'var(--me)' : 'var(--both)', stroke: 'var(--surface)', 'stroke-width': 2}, svg);
-      const hit = sv('circle', {cx, cy, r: 9, fill: 'transparent'}, svg);
-      hover(hit, () => `<b>${esc(p.name)}</b>${tipRow(null, 'Your rating', p.rating)}${tipRow(null, 'Plays', p.plays)}${p.own ? '' : '<div class="muted">Not owned</div>'}`,
-        () => c.setAttribute('r', 6.5), () => c.setAttribute('r', 4.5));
+    // x grid + labels
+    [0, 1, 2, 5, 10, 20, 50, 100].filter(v => v <= pmax).forEach(v => {
+      sv('line', {x1: X(v), x2: X(v), y1: m.t, y2: bottom, class: 'grid-line'}, svg);
+      const t = sv('text', {x: X(v), y: bottom + 15, 'text-anchor': 'middle', class: 'axis-text'}, svg); t.textContent = v;
     });
-    // label the most-played games, skipping any label that would collide with one already placed
-    const placed = [];
-    [...pts].sort((a, b) => b.plays - a.plays).slice(0, 8).forEach(p => {
-      if (placed.length >= 5) return;
-      const name = p.name.length > 24 ? p.name.slice(0, 22) + '…' : p.name;
-      const w = name.length * 6.2, x = X(p.rating + hash(p.id) * 0.36), y = Y(p.plays);
-      const anchor = x + 9 + w > W - m.r ? 'end' : 'start';
-      const box = {x0: anchor === 'end' ? x - 9 - w : x + 9, y0: y - 9, y1: y + 5};
-      box.x1 = box.x0 + w;
-      if (placed.some(b => box.x0 < b.x1 + 4 && box.x1 > b.x0 - 4 && box.y0 < b.y1 && box.y1 > b.y0)) return;
-      placed.push(box);
-      const t = sv('text', {x: anchor === 'end' ? x - 9 : x + 9, y: y + 4, 'text-anchor': anchor, class: 'axis-text', style: 'fill:var(--ink-2)'}, svg);
-      t.textContent = name;
+    sv('line', {x1: m.l, x2: W - m.r, y1: bottom, y2: bottom, class: 'base-line'}, svg);
+    const xl = sv('text', {x: m.l + iw / 2, y: H - 2, 'text-anchor': 'middle', class: 'axis-text'}, svg); xl.textContent = 'Plays →';
+    const ch = sv('text', {x: W - 2, y: m.t - 6, 'text-anchor': 'end', class: 'axis-text'}, svg); ch.textContent = 'games';
+
+    rows.forEach((row, i) => {
+      if (i) sv('line', {x1: m.l - 24, x2: W - 2, y1: row.y0, y2: row.y0, class: 'grid-line', 'stroke-dasharray': Number.isInteger(row.k) ? '' : '2 3'}, svg);
+      const mid = row.y0 + row.h / 2;
+      const lt = sv('text', {x: m.l - 12, y: mid + 4, 'text-anchor': 'end', class: 'row-label' + (Number.isInteger(row.k) ? ' int' : '')}, svg);
+      lt.textContent = fmtR(row.k);
+      if (row.placed.length) {
+        const ct = sv('text', {x: W - 2, y: mid + 4, 'text-anchor': 'end', class: 'axis-text'}, svg);
+        ct.textContent = row.placed.length;
+      }
+      row.placed.forEach(({p, x, dy}) => {
+        const cy = row.cy + dy;
+        const g = sv('g', {class: 'swarm-dot', tabindex: 0, role: 'button', 'aria-label': `${p.name}: rated ${p.rating}, ${p.plays} plays`}, svg);
+        const c = sv('circle', {cx: x, cy, r: R, fill: p.own ? 'var(--me)' : 'var(--both)', stroke: 'var(--surface)', 'stroke-width': 1.5}, g);
+        sv('circle', {cx: x, cy, r: R + 3, class: 'ring'}, g);
+        sv('circle', {cx: x, cy, r: Math.max(R + 3, gap / 2 + 1), fill: 'transparent'}, g);
+        g.classList.toggle('sel', p.id === selId);
+        hover(g, () => `<b>${esc(p.name)}</b>`, () => c.setAttribute('r', R + 1.5), () => c.setAttribute('r', R));
+        g.addEventListener('click', () => select(p, true));
+        g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); select(p, true); } });
+        dotNodes.set(p.id, g);
+      });
     });
+    const yl = sv('text', {x: 8, y: m.t + (bottom - m.t) / 2, 'text-anchor': 'middle', class: 'axis-text', transform: `rotate(-90 8 ${m.t + (bottom - m.t) / 2})`}, svg);
+    yl.textContent = 'Your rating';
     $('scatter').appendChild(svg);
   });
   const gems = C.owned.filter(g => g.rating >= 8.5 && g.plays <= 2).sort((a, b) => b.rating - a.rating);
@@ -1181,7 +1316,87 @@ $('notes').innerHTML = D.notes.length ? D.notes.map(n => `<article class="log ${
   draw();
 }
 
-$('footer').innerHTML = `Data from the <a href="https://boardgamegeek.com/user/${esc(O.username)}">BoardGameGeek</a> XML API, rebuilt every week. Source on <a href="https://github.com/joey-kilgore/bgg-analysis">GitHub</a>.`;
+// ---------- play log ----------
+{
+  const LG = D.playLog.games;
+  const plays = D.playLog.plays.map(p => {
+    const game = LG[p.gid] || {id: p.gid, name: '?'};
+    const hay = [game.name, p.loc, p.note, ...p.exp, ...p.players.map(x => x.name)].join(' ').toLowerCase();
+    return {...p, game, expansions: p.exp, hay, pkeys: new Set(p.players.map(x => x.name.toLowerCase()))};
+  });
+  const st = {q: '', game: '', player: '', result: '', from: '', to: '', shown: 50};
+
+  // dropdown options, with play counts
+  const gameCounts = new Map(), playerCounts = new Map();
+  plays.forEach(p => {
+    gameCounts.set(p.gid, (gameCounts.get(p.gid) || 0) + p.qty);
+    p.players.forEach(x => {
+      if (x.me || !x.name.trim()) return;
+      const k = x.name.toLowerCase(), r = playerCounts.get(k) || {n: 0, names: new Map()};
+      r.n += p.qty; r.names.set(x.name, (r.names.get(x.name) || 0) + 1);
+      playerCounts.set(k, r);
+    });
+  });
+  $('pl-game').innerHTML += [...gameCounts].sort((a, b) => (LG[a[0]]?.name || '').localeCompare(LG[b[0]]?.name || ''))
+    .map(([id, n]) => `<option value="${id}">${esc(LG[id]?.name || '?')} (${n})</option>`).join('');
+  $('pl-player').innerHTML += [...playerCounts].sort((a, b) => b[1].n - a[1].n)
+    .map(([k, r]) => `<option value="${esc(k)}">${esc([...r.names].sort((a, b) => b[1] - a[1])[0][0])} (${r.n})</option>`).join('');
+  const results = [['', 'Any result'], ['me', `${ME} won`], ...(PARTNER ? [['partner', `${PARTNER} won`]] : []), ['other', 'Someone else won'], ['none', 'No winner recorded']];
+  $('pl-result').innerHTML = results.map(([v, l]) => `<option value="${v}">${esc(l)}</option>`).join('');
+
+  // date presets
+  const iso = d => d.toISOString().slice(0, 10);
+  const end = O.generated, years = [...new Set(plays.map(p => p.date.slice(0, 4)))].sort().reverse();
+  const presets = [['All', '', ''], ['Last 30 days', iso(new Date(today - 29 * 864e5)), end], ['Last 12 months', iso(new Date(today - 364 * 864e5)), end],
+    ...years.slice(0, 4).map(y => [y, `${y}-01-01`, `${y}-12-31`])];
+
+  const winnerOf = p => {
+    const w = p.players.filter(x => x.win);
+    if (!w.length) return 'none';
+    if (w.some(x => x.me)) return 'me';
+    if (w.some(x => x.partner)) return 'partner';
+    return 'other';
+  };
+  plays.forEach(p => p.res = winnerOf(p));
+
+  function draw() {
+    const q = st.q.toLowerCase().split(/\s+/).filter(Boolean);
+    const rows = plays.filter(p =>
+      (!st.game || p.gid === +st.game) &&
+      (!st.player || p.pkeys.has(st.player)) &&
+      (!st.result || p.res === st.result) &&
+      (!st.from || p.date >= st.from) && (!st.to || p.date <= st.to) &&
+      q.every(t => p.hay.includes(t)));
+    const n = rows.reduce((s, p) => s + p.qty, 0), games = new Set(rows.map(p => p.gid)).size;
+    const myWins = rows.filter(p => p.res === 'me').reduce((s, p) => s + p.qty, 0);
+    const span = rows.length ? (rows[rows.length - 1].date === rows[0].date ? fmtDate(rows[0].date) : `${fmtDate(rows[rows.length - 1].date)} – ${fmtDate(rows[0].date)}`) : '';
+    $('pl-summary').innerHTML = rows.length
+      ? `<b>${fmtN(n)}</b> play${n === 1 ? '' : 's'} of <b>${games}</b> game${games === 1 ? '' : 's'} · ${ME} won ${myWins} · ${span}`
+      : 'No plays match these filters.';
+    $('pl-list').innerHTML = rows.slice(0, st.shown).map(p => playRow(p,
+      `${fmtDate(p.date, {weekday: 'short', month: 'short', day: 'numeric', year: 'numeric'})}${p.len ? `<br>${p.len} min` : ''}${p.loc ? `<br><span class="loc">${esc(p.loc)}</span>` : ''}`)).join('') +
+      (rows.length > st.shown ? `<button class="btn-more" type="button" id="pl-more">Show ${Math.min(100, rows.length - st.shown)} more (${rows.length - st.shown} left)</button>` : '');
+    const more = $('pl-more'); if (more) more.onclick = () => { st.shown += 100; draw(); };
+    $('pl-range').innerHTML = presets.map(([l, f, t]) => `<button type="button" data-f="${f}" data-t="${t}" aria-pressed="${st.from === f && st.to === t}">${l}</button>`).join('');
+  }
+  const set = (k, v) => { st[k] = v; st.shown = 50; draw(); };
+  $('pl-q').addEventListener('input', e => set('q', e.target.value.trim()));
+  [['pl-game', 'game'], ['pl-player', 'player'], ['pl-result', 'result'], ['pl-from', 'from'], ['pl-to', 'to']]
+    .forEach(([id, k]) => $(id).addEventListener('change', e => set(k, e.target.value)));
+  $('pl-range').addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    $('pl-from').value = st.from = b.dataset.f; $('pl-to').value = st.to = b.dataset.t;
+    st.shown = 50; draw();
+  });
+  $('pl-clear').onclick = () => {
+    Object.assign(st, {q: '', game: '', player: '', result: '', from: '', to: '', shown: 50});
+    ['pl-q', 'pl-game', 'pl-player', 'pl-result', 'pl-from', 'pl-to'].forEach(id => $(id).value = '');
+    draw();
+  };
+  draw();
+}
+
+$('footer').innerHTML =`Data from the <a href="https://boardgamegeek.com/user/${esc(O.username)}">BoardGameGeek</a> XML API, rebuilt every week. Source on <a href="https://github.com/joey-kilgore/bgg-analysis">GitHub</a>.`;
 
 // ---------- theme toggle ----------
 {
