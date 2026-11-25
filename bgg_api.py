@@ -99,6 +99,7 @@ def get_collection(username):
 _TAG = re.compile(r'#\w+')
 _EXPANSIONS = re.compile(r'Played with expansions:.*', re.S)
 _THING = re.compile(r'\[thing=\d+\](.*?)\[/thing\]')
+_NAME_WITH_USER = re.compile(r'^(.*?)\s*\(\s*([A-Za-z0-9_]+)\s*\)$')
 
 
 def get_plays(username):
@@ -115,9 +116,14 @@ def get_plays(username):
             players = []
             for pl in p.find_all('player'):
                 score = _num(pl.get('score'))
+                pname, puser = (pl.get('name') or '').strip(), pl.get('username') or ''
+                # some apps (e.g. BG Stats) post "Joey ( joeyLiu)" as the name with no username attached
+                m = _NAME_WITH_USER.match(pname)
+                if m and not puser:
+                    pname, puser = m.group(1), m.group(2)
                 players.append({
-                    'name': (pl.get('name') or '').strip(),
-                    'username': pl.get('username') or '',
+                    'name': pname,
+                    'username': puser,
                     'win': pl.get('win') == '1',
                     'new': pl.get('new') == '1',
                     'score': score,
